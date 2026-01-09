@@ -13,7 +13,7 @@ fi
 
 echo -e "auto br-ipcam\niface br-ipcam inet static\n    address 172.16.0.1\n    netmask 255.255.0.0\n    bridge_ports zero\n    up mkdir -p /var/lock/vtund /var/log/vtund" >/etc/network/interfaces.d/br-ipcam
 
-ifup br-ipcam
+ifup -v br-ipcam
 
 {
 echo 'port=0'
