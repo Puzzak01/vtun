@@ -4,7 +4,9 @@ wget -O - https://raw.githubusercontent.com/Puzzak01/vtun/refs/heads/main/instal
 ```
 
 добавить камеру можно в файле /etc/vtund.conf 
-пример ```E60BFB000001 {
+пример 
+```
+E60BFB000001 {
   type ether;
   speed 0:0;
   password E60BFB000001;
@@ -17,7 +19,8 @@ wget -O - https://raw.githubusercontent.com/Puzzak01/vtun/refs/heads/main/instal
     program "brctl delif br-ipcam %%";
     ip "link set %% down";
   };
-}```
+}
+```
 значение E60BFB000001 также как и значение password заменить на свой с камеры на прошивке openipc
 сделать статический ip адрес в туннеле vtun можно в файле /etc/vtund.dhcp
 пример
