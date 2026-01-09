@@ -11,14 +11,7 @@ if [ -f "$FILE" ] && ! grep -Fxq "$LINE" "$FILE"; then
     echo "$LINE" >> "$FILE"
 fi
 
-{
-echo 'auto br-ipcam'
-echo 'iface br-ipcam inet static'
-echo '    address 44.188.200.1'
-echo '    netmask 255.255.255.0'
-echo '    bridge_ports zero'
-echo '    up mkdir -p /var/lock/vtund /var/log/vtund'
-} > /etc/network/interfaces.d/br-ipcam
+echo -e "auto br-ipcam\niface br-ipcam inet static\n    address 172.16.0.1\n    netmask 255.255.0.0\n    bridge_ports zero\n    up mkdir -p /var/lock/vtund /var/log/vtund" >/etc/network/interfaces.d/br-ipcam
 
 ifup br-ipcam
 
@@ -40,7 +33,7 @@ echo ''
 echo 'dhcp-option=option:ntp-server,77.88.8.8'
 echo 'dhcp-option=option:dns-server,8.8.4.4,8.8.8.8'
 echo ''
-echo 'dhcp-option=121,44.188.200.0/24,44.188.200.1'
+echo 'dhcp-option=121,172.16.0.0/16,172.16.0.1'
 echo ''
 echo 'dhcp-leasefile=/var/lib/misc/dnsmasq.leases'
 echo 'log-facility=/var/log/dnsmasq.log'
@@ -54,8 +47,8 @@ echo ''
 echo 'conf-file=/etc/vtund.dhcp'
 echo ''
 echo 'interface=br-ipcam'
-echo 'listen-address=44.188.200.1'
-echo 'dhcp-range=44.188.200.2,44.188.200.254,255.255.255.0,infinite'
+echo 'listen-address=172.16.0.1'
+echo 'dhcp-range=172.16.0.2,172.16.255.254,255.255.0.0,infinite'
 } > /etc/dnsmasq.conf
 
 {
