@@ -15,41 +15,7 @@ echo -e "auto br-ipcam\niface br-ipcam inet static\n    address 172.16.0.1\n    
 
 ifup -v br-ipcam
 
-{
-echo 'port=0'
-echo ''
-echo 'conf-dir=/etc/dnsmasq.d/,*.conf'
-echo ''
-echo 'domain-needed'
-echo 'bogus-priv'
-echo 'filterwin2k'
-echo ''
-echo 'no-resolv'
-echo 'no-poll'
-echo ''
-echo 'server=77.88.8.8'
-echo 'server=8.8.4.4'
-echo ''
-echo 'dhcp-option=option:ntp-server,77.88.8.8'
-echo 'dhcp-option=option:dns-server,8.8.4.4,8.8.8.8'
-echo ''
-echo 'dhcp-option=121,172.16.0.0/16,172.16.0.1'
-echo ''
-echo 'dhcp-leasefile=/var/lib/misc/dnsmasq.leases'
-echo 'log-facility=/var/log/dnsmasq.log'
-echo 'log-queries'
-echo 'log-dhcp'
-echo ''
-echo 'dhcp-authoritative'
-echo 'cache-size=150'
-echo 'no-negcache'
-echo ''
-echo 'conf-file=/etc/vtund.dhcp'
-echo ''
-echo 'interface=br-ipcam'
-echo 'listen-address=172.16.0.1'
-echo 'dhcp-range=172.16.0.2,172.16.255.254,255.255.0.0,infinite'
-} > /etc/dnsmasq.conf
+wget -O /etc/dnsmasq.conf https://raw.githubusercontent.com/Puzzak01/vtun/refs/heads/main/dnsmasq.conf
 
 {
 echo '5000    stream  tcp     nowait  root    /usr/local/bin/vtund vtund -i -f /etc/vtund.conf'
@@ -58,34 +24,14 @@ echo '5000    stream  tcp     nowait  root    /usr/local/bin/vtund vtund -i -f /
 systemctl restart dnsmasq
 systemctl restart inetutils-inetd
 
-sysctl -w net.ipv4.ip_forward=1; sysctl -p /etc/sysctl.conf
+sysctl -w net.ipv4.ip_forward=1 && grep -q '^net.ipv4.ip_forward=1' /etc/sysctl.conf || echo 'net.ipv4.ip_forward=1' >> /etc/sysctl.conf && sysctl -p /etc/sysctl.conf
 
 touch /etc/vtund.dhcp
 
 wget -O /usr/local/bin/vtund https://github.com/Puzzak01/vtun/raw/refs/heads/main/vtund
 chmod +x /usr/local/bin/vtund
 
-{
-echo 'options {'
-echo '  port 5000;'
-echo '  syslog cron;'
-echo '  timeout 60;'
-echo '  ip /bin/ip;'
-echo '}'
-echo 'default {'
-echo '  type tun;'
-echo '  proto tcp;'
-echo '  persist yes;'
-echo '  keepalive 10:5;'
-echo '  timeout 60;'
-echo '  compress no;'
-echo '  encrypt no;'
-echo '  stat no;'
-echo '  speed 512:512;'
-echo '  multi killold;'
-echo '}'
-echo '#'
-} > /etc/vtund.conf
+wget -O /etc/vtund.conf https://raw.githubusercontent.com/Puzzak01/vtun/refs/heads/main/vtund.conf
 
 {
 echo ''
@@ -106,7 +52,3 @@ echo 'WantedBy=multi-user.target'
 systemctl enable vtund
 systemctl start vtund
 netstat -lntup4
-systemctl enable dnsmasq
-
-systemctl restart dnsmasq; sleep 1; systemctl --no-pager status dnsmasq
-systemctl restart vtund ; systemctl status vtund ; netstat -lntup4
