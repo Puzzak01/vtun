@@ -26,5 +26,5 @@ E60BFB000001 {
 сделать статический ip адрес в туннеле vtun можно в файле /etc/vtund.dhcp
 пример
 ```
-dhcp-host=AA:BB:CC:DD:EE:01,44.188.200.3
+dhcp-host=AA:BB:CC:DD:EE:01,172.16.0.3
 ```
