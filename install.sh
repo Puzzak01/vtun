@@ -32,23 +32,4 @@ wget -O /usr/local/bin/vtund https://github.com/Puzzak01/vtun/raw/refs/heads/mai
 chmod +x /usr/local/bin/vtund
 
 wget -O /etc/vtund.conf https://raw.githubusercontent.com/Puzzak01/vtun/refs/heads/main/vtund.conf
-
-{
-echo ''
-echo '[Unit]'
-echo 'Description=VTUN tunnel'
-echo 'After=network.target'
-echo ''
-echo '[Service]'
-echo 'Type=simple'
-echo 'ExecStart=/usr/local/bin/vtund -n -s -f /etc/vtund.conf'
-echo 'Restart=always'
-echo 'RestartSec=10'
-echo ''
-echo '[Install]'
-echo 'WantedBy=multi-user.target'
-} > /etc/systemd/system/vtund.service
-
-systemctl enable vtund
-systemctl start vtund
 netstat -lntup4
