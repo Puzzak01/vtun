@@ -16,6 +16,10 @@ echo -e "auto br-ipcam\niface br-ipcam inet static\n    address 172.16.0.1\n    
 ifup -v br-ipcam
 
 wget -O /etc/dnsmasq.conf https://raw.githubusercontent.com/Puzzak01/vtun/refs/heads/main/dnsmasq.conf
+wget -O /usr/local/bin/vtund https://github.com/Puzzak01/vtun/raw/refs/heads/main/vtund
+chmod +x /usr/local/bin/vtund
+touch /etc/vtund.dhcp
+wget -O /etc/vtund.conf https://raw.githubusercontent.com/Puzzak01/vtun/refs/heads/main/vtund.conf
 
 {
 echo '5000    stream  tcp     nowait  root    /usr/local/bin/vtund vtund -i -f /etc/vtund.conf'
@@ -26,10 +30,4 @@ systemctl restart inetutils-inetd
 
 sysctl -w net.ipv4.ip_forward=1 && grep -q '^net.ipv4.ip_forward=1' /etc/sysctl.conf || echo 'net.ipv4.ip_forward=1' >> /etc/sysctl.conf && sysctl -p /etc/sysctl.conf
 
-touch /etc/vtund.dhcp
-
-wget -O /usr/local/bin/vtund https://github.com/Puzzak01/vtun/raw/refs/heads/main/vtund
-chmod +x /usr/local/bin/vtund
-
-wget -O /etc/vtund.conf https://raw.githubusercontent.com/Puzzak01/vtun/refs/heads/main/vtund.conf
 netstat -lntup4
